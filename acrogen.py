@@ -41,15 +41,11 @@ def build(word, used_chunks, result, length=4):
     if word[-1][-1] in 'aeiou':
         chunks = consonant_chunks
     else:
+        # include 'and' only in second to last chunk
         if len(word) == length - 2:
             chunks = vowel_chunks + and_chunk
         else:
             chunks = vowel_chunks
-        # include 'and' only in second to last chunk
-        # import ipdb
-        # ipdb.set_trace()
-        # if len(word) == length - 1:
-        #     chunks += and_chunk
 
     for chunk in chunks:
         if chunk.base in used_chunks:
@@ -63,8 +59,9 @@ def build(word, used_chunks, result, length=4):
             build(new_word, used_chunks + [chunk.base], result, length)
 
 result = []
-for chunk in vowel_chunks + consonant_chunks:
-    build([chunk], [chunk.base], result)
+for length in (3, 4):
+    for chunk in vowel_chunks + consonant_chunks:
+        build([chunk], [chunk.base], result, length)
 
 # sort and print acronyms
 for string, chunks in sorted(result):
